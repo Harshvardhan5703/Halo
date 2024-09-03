@@ -66,14 +66,15 @@ export const formatDateTime = (dateString: Date) => {
 };
 
 export function formatAmount(amount: number): string {
-  const formatter = new Intl.NumberFormat("en-US", {
+  const formatter = new Intl.NumberFormat("en-IN", {
     style: "currency",
-    currency: "USD",
+    currency: "INR",
     minimumFractionDigits: 2,
   });
 
   return formatter.format(amount);
 }
+
 
 export const parseStringify = (value: any) => JSON.parse(JSON.stringify(value));
 
@@ -192,4 +193,18 @@ export const getTransactionStatus = (date: Date) => {
   twoDaysAgo.setDate(today.getDate() - 2);
 
   return date > twoDaysAgo ? "Processing" : "Success";
+};
+
+export const formatIndianNumber = (number: { toString: () => string; }) => {
+  let numStr = number.toString().split('.')[0];
+  let lastThree = numStr.slice(-3);
+  let otherNumbers = numStr.slice(0, -3);
+  if (otherNumbers !== '') {
+      lastThree = ',' + lastThree;
+  }
+  let result = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
+  if (number.toString().includes('.')) {
+      result += '.' + number.toString().split('.')[1];
+  }
+  return result;
 };
