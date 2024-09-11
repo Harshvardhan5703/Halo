@@ -2,6 +2,7 @@
 import { type ClassValue, clsx } from "clsx";
 import qs from "query-string";
 import { twMerge } from "tailwind-merge";
+import { z } from "zod";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -208,3 +209,21 @@ export const formatIndianNumber = (number: { toString: () => string; }) => {
   }
   return result;
 };
+
+export const authFormSchema = (type:string) => z.object({
+ 
+  firstName: type === 'sign-in'? z.string().optional() :z.string().min(3),
+  lastName:  type === 'sign-in'? z.string().optional() :z.string().min(3) ,
+  address1:  type === 'sign-in'? z.string().optional() :z.string().max(50),
+  state:     type === 'sign-in'? z.string().optional() :z.string().min(3) ,
+  postalCode:type === 'sign-in'? z.string().optional() :z.string().min(6,{message:"Incorrect PIN code"}),
+  dateOfBirth:type === 'sign-in'? z.string().optional() : z.string().regex(/^\d{2}-\d{2}-\d{4}$/, {
+    message: "Date must be in dd-mm-yyyy format",
+  }),
+  city :  type === 'sign-in'? z.string().optional() :z.string().max(50),
+  aadhar:     type === 'sign-in'? z.string().optional() : z.string().min(12,{message:"Incorrect aadhar number"}),
+  email:        z.string().email(),
+  password:     z.string().min(8),
+
+})
+
